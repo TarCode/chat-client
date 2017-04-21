@@ -8,6 +8,7 @@ import * as actions from './actions'
 import AppTemplate from './components/AppTemplate'
 import Base from './components/Base'
 import Login from './components/Login'
+import EditGroup from './components/EditGroup'
 
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)
@@ -16,8 +17,9 @@ render(
   <Provider store= {store}>
     <Router history={history}>
       <Route path='/' component={AppTemplate}>
-        <IndexRoute component={Home}/>
+        <IndexRoute component={Base}/>
         <Route path='/login' component={Login}/>
+        <Route path='/edit-group' component={EditGroup}/>
       </Route>
     </Router>
   </Provider>,
