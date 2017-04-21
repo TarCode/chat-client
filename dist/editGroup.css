@@ -1,6 +1,7 @@
 
 .settingsContainer {
 	padding: 20px;
+  overflow: auto;
 }
 
 .settingsContainer input[name=name] {

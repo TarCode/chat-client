@@ -1,5 +1,7 @@
 import 'isomorphic-fetch'
 import { browserHistory } from 'react-router'
+import xml2js from 'xml2js'
+const parseString = xml2js.parseString
 
 export const GET_USERS = "GET_USERS"
 export const RECEIVE_USERS = "RECEIVE_USERS"
@@ -9,15 +11,19 @@ export function getUsers() {
     dispatch({ type: GET_USERS })
     fetch('http://localhost:3000/users')
     .then(response => response.json())
-    .then(parsed => {
-      console.log('parsed from users', parsed.text);
+    .then(json => {
+      parseString(json.text, (err, parsed) => {
+        const userJson = parsed.Users.User.map(i => ({
+          firstname: i.Name[0],
+          surname: i.Surname[0],
+          email: i.Email[0]
+        }))
         dispatch({
           type: RECEIVE_USERS,
-          // data: {
-          //   coords: position.coords,
-          //   address: parsed.results[0].formatted_address
-          // }
+          users: userJson
         })
+      })
+
     })
   }
 }

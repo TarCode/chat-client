@@ -27,6 +27,7 @@
     "redux": "^3.5.2",
     "redux-form": "^6.6.3",
     "redux-logger": "^2.6.1",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "xml2js": "^0.4.17"
   }
 }

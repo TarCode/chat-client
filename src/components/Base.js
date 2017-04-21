@@ -13,6 +13,7 @@ class Base extends React.Component {
     }
   }
   render() {
+    const { groups } = this.props
     return (
       <div>
         <div className='chats'>
@@ -20,21 +21,18 @@ class Base extends React.Component {
             <div>Groups</div>
             <div onClick={() => { browserHistory.push('/edit-group') } } className='addGroup'>+</div>
           </div>
-
-          <div className='chat active'>
-            <div className='picture'></div>
-            <div className='name'>Group 1</div>
-          </div>
-
-          <div className='chat'>
-            <div className='picture'></div>
-            <div className='name'>Group 2</div>
-          </div>
-
-          <div className='chat'>
-            <div className='picture'></div>
-            <div className='name'>Group 3</div>
-          </div>
+          {
+            groups && groups.length > 0 ?
+            groups.map((g, index) => (
+              <div key={index} className='chat'>
+                <div className='picture'></div>
+                <div className='name'>{g.groupName}</div>
+              </div>
+            )) :
+            <div className='chat'>
+              <div className='name'>No Groups</div>
+            </div>
+          }
         </div>
 
         <div className='content'>
@@ -46,9 +44,11 @@ class Base extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { user } = state.users
+  const { user } = state.user
+  const { groups } = state.groups
   return {
-    user
+    user,
+    groups
   }
 }
 
