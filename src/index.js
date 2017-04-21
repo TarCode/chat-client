@@ -10,6 +10,7 @@ import Base from './components/Base'
 import Login from './components/Login'
 import EditGroup from './components/EditGroup'
 import SetPassword from './components/SetPassword'
+import Chat from './components/Chat'
 
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)
@@ -22,6 +23,7 @@ render(
         <Route path='/login' component={Login}/>
         <Route path='/edit-group' component={EditGroup}/>
         <Route path='/set-password' component={SetPassword}/>
+        <Route path='/chat' component={Chat}/>
       </Route>
     </Router>
   </Provider>,
