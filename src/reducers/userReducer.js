@@ -1,14 +1,14 @@
 import { merge } from 'lodash'
-import { GET_USERS, RECEIVE_USERS } from '../actions/userActions'
+import { GET_USERS, RECEIVE_USERS, LOGIN, LOGIN_SUCCESS } from '../actions/userActions'
 
-const initialState = {}
-
-export default (state = initialState, action) => {
+export default (state = {}, action) => {
   switch (action.type) {
-    case GET_USERS:
-      return merge({}, state, { loading: true })
-    case RECEIVE_USERS:
-
+    case LOGIN:
+      return merge({}, { loading: true })
+    case LOGIN_SUCCESS:
+      return merge({}, {
+        user: action.user
+      })
     default:
       return state
   }

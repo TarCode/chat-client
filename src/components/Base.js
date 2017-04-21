@@ -1,7 +1,8 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
+import { connect } from 'react-redux'
 
-export default class extends React.Component {
+class Base extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -17,7 +18,7 @@ export default class extends React.Component {
         <div className='chats'>
           <div className='head'>
             <div>Groups</div>
-            <div onClick={ browserHistory.push('/edit-group') } className='addGroup'>+</div>
+            <div onClick={() => { browserHistory.push('/edit-group') } } className='addGroup'>+</div>
           </div>
 
           <div className='chat active'>
@@ -43,3 +44,12 @@ export default class extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  const { user } = state.users
+  return {
+    user
+  }
+}
+
+export default connect(mapStateToProps, {})(Base)

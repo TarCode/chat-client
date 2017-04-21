@@ -1,5 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
+import { login } from '../../actions'
 
 const Login = ({ handleSubmit }) => (
   <table className="middle">
@@ -33,6 +34,8 @@ export default reduxForm({
         type: 'error',
         confirmButtonText: 'Okay'
       })
+    } else {
+      dispatch(login(values))
     }
   }
 })(Login)
