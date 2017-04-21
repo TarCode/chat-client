@@ -1,3 +1,3 @@
-import { getUsers } from './userActions'
+import { getUsers, setPassword } from './userActions'
 
-export { getUsers }
+export { getUsers, setPassword }

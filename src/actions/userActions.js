@@ -19,3 +19,24 @@ export function getUsers() {
     })
   }
 }
+
+export const SET_PASSWORD = "SET_PASSWORD"
+export const SET_PASSWORD_SUCCESS = "SET_PASSWORD_SUCCESS"
+export const SET_PASSWORD_ERROR = "SET_PASSWORD_ERROR"
+
+export function setPassword(password) {
+  return dispatch => {
+    dispatch({ type: SET_PASSWORD})
+    fetch('http://localhost:3000/set-password', {
+      method: 'POST',
+      body: JSON.stringify(password),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => {
+      console.log('response from password', response);
+    })
+  }
+}
