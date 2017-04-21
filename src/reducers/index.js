@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-import location from './locationReducer'
+import users from './userReducer'
 
 export default combineReducers({
-  location,
+  users,
   routing: routerReducer
 })

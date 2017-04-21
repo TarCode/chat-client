@@ -1,3 +1,3 @@
-import { getLocation } from './locationActions'
+import { getUsers } from './userActions'
 
-export { getLocation }
+export { getUsers }
