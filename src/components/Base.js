@@ -2,7 +2,8 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { addGroup } from '../actions'
+import { addGroup, getGroups, getUsers } from '../actions'
+import Loader from './Loader'
 
 class Base extends React.Component {
   constructor(props) {
@@ -13,10 +14,12 @@ class Base extends React.Component {
     console.log('props from base', this.props);
     if(!this.props.user) {
       browserHistory.push('/login')
+    } else {
+      this.props.getGroups()
     }
   }
   render() {
-    const { groups, addGroup, selectedIndex } = this.props
+    const { user, groups, addGroup, loading } = this.props
     console.log('selected index from base', this.props.params);
     const selectIndex = this.props.params.groupId
     return (
@@ -25,11 +28,28 @@ class Base extends React.Component {
           <div className='head'>
             <div>Groups</div>
             <div onClick={() => {
-              addGroup()
+              swal({
+                title: 'Add Group Name',
+                input: 'text',
+                showCancelButton: true,
+                inputValidator: value => {
+                  return new Promise((resolve, reject) => {
+                    if (value) {
+                      resolve()
+                    } else {
+                      reject('You need to write something!')
+                    }
+                  })
+                }
+              }).then(result => {
+                addGroup(result, user)
+              })
              } } className='addGroup'>+</div>
           </div>
           {
-            groups && groups.length > 0 ?
+            loading ?
+            <Loader/> :
+            (groups && groups.length > 0 ?
             groups.map((g, index) => (
               <div onClick={() => {
                 browserHistory.push('/chat/' + index)
@@ -40,13 +60,17 @@ class Base extends React.Component {
             )) :
             <div className='chat'>
               <div className='name'>No Groups</div>
-            </div>
+            </div>)
           }
         </div>
 
-        <div className='content'>
-          {this.props.children}
-        </div>
+        {
+          loading ?
+          <Loader/> :
+          <div className='content'>
+            {this.props.children}
+          </div>
+        }
       </div>
     )
   }
@@ -54,17 +78,18 @@ class Base extends React.Component {
 
 function mapStateToProps(state) {
   const { user } = state.user
-  const { groups, selectedIndex } = state.groups
+  const { groups, loading } = state.groups
   return {
     user,
     groups,
-    selectedIndex
+    loading
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    addGroup: bindActionCreators(addGroup, dispatch)
+    addGroup: bindActionCreators(addGroup, dispatch),
+    getGroups: bindActionCreators(getGroups, dispatch)
   }
 }
 

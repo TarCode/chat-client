@@ -1,5 +1,5 @@
 import { getUsers, setPassword, login } from './userActions'
 
-import { addGroup, updateGroup } from './groupActions'
+import { getGroups, addGroup, updateGroup } from './groupActions'
 
-export { getUsers, setPassword, login, addGroup, updateGroup } 
+export { getUsers, setPassword, login, getGroups, addGroup, updateGroup }
