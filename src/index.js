@@ -13,13 +13,13 @@ import Chat from './components/Chat'
 
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)
-store.dispatch(actions.getUsers())
 render(
   <Provider store= {store}>
     <Router history={history}>
       <Route path='/' component={Base}>
-        <IndexRoute component={Chat}/>
-        <Route path='/edit-group' component={EditGroup}/>
+        <IndexRoute component={() => <h3>No chats selected</h3>}/>
+        <Route path='/edit-group/:groupId' component={EditGroup}/>
+        <Route path="/chat/:groupId" component={Chat}/>
       </Route>
       <Route path='/login' component={Login}/>
       <Route path='/set-password' component={SetPassword}/>

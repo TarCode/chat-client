@@ -1,17 +1,26 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { getUsers, addGroup } from '../../actions'
+import { getUsers, updateGroup } from '../../actions'
 import { connect } from 'react-redux'
 
 class EditGroup extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      addMember: false,
-      email: "",
-      groupName: "",
-      members: []
+    if(props.group) {
+      this.state = {
+        addMember: false,
+        email: "",
+        groupName: props.group.groupName,
+        members: []
+      }
+    } else {
+      this.state = {
+        addMember: false,
+        email: "",
+        groupName: "",
+        members: []
+      }
     }
   }
   componentDidMount() {
@@ -113,7 +122,8 @@ class EditGroup extends React.Component {
           <div onClick={() => {
             submit({
               groupName: this.state.groupName,
-              members: this.state.members
+              members: this.state.members,
+              groupIndex: this.props.groupIndex || null
             })
           }} className='save btn'>Save Group</div>
         </div>
@@ -121,18 +131,29 @@ class EditGroup extends React.Component {
     )
   }
 }
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const { users, loading } = state.users
-  return {
-    users,
-    loading
+  const { groups } = state.groups
+  if(ownProps && ownProps.params && ownProps.params.groupId) {
+    return {
+      users,
+      loading,
+      group: groups[ownProps.params.groupId],
+      groupIndex: ownProps.params.groupId
+    }
+  } else {
+    return {
+      users,
+      loading
+    }
   }
+
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     getUsers: bindActionCreators(getUsers, dispatch),
-    submit: bindActionCreators(addGroup, dispatch)
+    submit: bindActionCreators(updateGroup, dispatch)
   }
 }
 
