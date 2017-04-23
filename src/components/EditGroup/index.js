@@ -1,38 +1,49 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { getUsers, updateGroup } from '../../actions'
+import { getUsers, getGroup, updateGroup, uploadImg } from '../../actions'
 import { connect } from 'react-redux'
+import Loader from '../Loader'
 
 class EditGroup extends React.Component {
   constructor(props) {
     super(props)
-    if(props.group) {
-      this.state = {
-        addMember: false,
-        email: "",
-        groupName: props.group.groupName,
-        members: []
-      }
-    } else {
-      this.state = {
-        addMember: false,
-        email: "",
-        groupName: "",
-        members: []
-      }
+    this.state = {
+      addMember: false,
+      email: "",
+      img_url: props.group.img_url || "",
+      groupName: props.group.groupName,
+      members: []
     }
   }
   componentDidMount() {
     this.props.getUsers()
   }
   render() {
-    const { users, loading, submit } = this.props
+    const { group, users, loading, submit, uploadImg, loading_img } = this.props
     return (
       <div className='settingsContainer'>
-        <div className='profilePicture'>
-          <input type="file"/>
-        </div>
+        {
+          loading_img ?
+          <Loader/> :
+          <div style={ this.state.img_url && this.state.img_url.length > 0 ? {background: `url(${this.state.img_url && this.state.img_url})`, backgroundSize: 'cover'} : null} className='profilePicture'>
+            <input onChange={(e) => {
+              console.log('this is the file', e.target);
+              let reader = new FileReader();
+               let file = e.target.files[0];
+
+               reader.onloadend = () => {
+                 this.state.img_url = {
+                   file: file,
+                   imagePreviewUrl: reader.result
+                 }
+                 uploadImg(file, this.state.groupName)
+                 this.setState(this.state);
+               }
+               reader.readAsDataURL(file)
+            }} type="file"/>
+          </div>
+        }
         <input value={this.state.groupName} onChange={(e) => {
           this.state.groupName = e.target.value
           this.setState(this.state)
@@ -120,11 +131,11 @@ class EditGroup extends React.Component {
         </div>
         <div>
           <div onClick={() => {
-            submit({
-              groupName: this.state.groupName,
-              members: this.state.members,
-              groupIndex: this.props.groupIndex || null
-            })
+            // submit({
+            //   groupName: this.state.groupName,
+            //   members: this.state.members,
+            //   groupIndex: this.props.groupIndex || null
+            // })
           }} className='save btn'>Save Group</div>
         </div>
       </div>
@@ -133,27 +144,20 @@ class EditGroup extends React.Component {
 }
 function mapStateToProps(state, ownProps) {
   const { users, loading } = state.users
-  const { groups } = state.groups
-  if(ownProps && ownProps.params && ownProps.params.groupId) {
-    return {
-      users,
-      loading,
-      group: groups[ownProps.params.groupId],
-      groupIndex: ownProps.params.groupId
-    }
-  } else {
-    return {
-      users,
-      loading
-    }
+  const { loading_img, group } = state.group
+  return {
+    users,
+    group,
+    loading_img,
   }
-
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     getUsers: bindActionCreators(getUsers, dispatch),
-    submit: bindActionCreators(updateGroup, dispatch)
+    getGroup: bindActionCreators(getGroup, dispatch),
+    submit: bindActionCreators(updateGroup, dispatch),
+    uploadImg: bindActionCreators(uploadImg, dispatch)
   }
 }
 

@@ -8,9 +8,12 @@ module.exports = {
   devServer: {
     inline: true,
     contentBase: './dist',
-    historyApiFallback: true
+    historyApiFallback: true,
+    syncHistoryWithStore: true
   },
   module: {
+    exprContextRegExp: /$^/,
+    exprContextCritical: false,
     loaders: [
       {
         test: /\.jsx?$/,

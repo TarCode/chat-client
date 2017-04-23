@@ -1,21 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
+import { getGroup } from '../../actions'
+import { bindActionCreators } from 'redux'
 
 class Chat extends React.Component {
   constructor(props) {
     super(props)
   }
 
+  componentWillMount() {
+
+  }
+
   render() {
-    const { group, groupIndex } = this.props
+    const { loading, group } = this.props
     return (
       <div>
         <div className="chatInfo">
           <div onClick={() => {
-            browserHistory.push('/edit-group/'+ groupIndex)
+            browserHistory.push('/edit-group/'+ this.props.params.groupId)
           }} className="editGroup">SETTINGS</div>
-          <div className="chatName">{group.groupName}</div>
+          <div className="chatName">{
+            loading ?
+            "Loading..." :
+            group && group.groupName
+          }</div>
         </div>
 
         <div className="chatContainer">
@@ -79,11 +89,11 @@ class Chat extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { groups } = state.groups
+  const { group, loading } = state.group
   return {
-    group: groups[ownProps.params.groupId],
-    groupIndex: ownProps.params.groupId
+    group,
+    loading
   }
 }
 
-export default connect(mapStateToProps, {})(Chat)
+export default connect(mapStateToProps)(Chat)

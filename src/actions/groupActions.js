@@ -1,4 +1,4 @@
-import cloudinary from 'cloudinary'
+import { browserHistory } from 'react-router'
 
 export const UPDATE_GROUP = "UPDATE_GROUP"
 
@@ -48,13 +48,41 @@ export function getGroups() {
   }
 }
 
+export const GET_GROUP = "GET_GROUP"
+export const RECEIVE_GROUP = "RECEIVE_GROUP"
+
+export function getGroup(groupId) {
+  return dispatch => {
+    dispatch({ type: GET_GROUP })
+    fetch('http://localhost:3000/group/' + groupId)
+    .then(response => response.json())
+    .then(json => {
+      console.log('group from group request', json);
+      dispatch({
+        type: RECEIVE_GROUP,
+        group: json[0]
+      })
+    })
+  }
+}
+
 export const UPLOAD_IMG = "UPLOAD_IMG"
 export const UPLOAD_IMG_SUCCESS = "UPLOAD_IMG_SUCCESS"
 export const UPLOAD_IMG_ERR = "UPLOAD_IMG_ERR"
 
-export function uploadImg(img_url) {
+export function uploadImg(file, name) {
+  var data = new FormData()
+  data.append('file', file)
+  data.append('name', name)
   return dispatch => {
     dispatch({ type: UPLOAD_IMG })
-
+    fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      body: data
+    })
+    .then(response => {
+      console.log('response', response);
+      dispatch({ type: UPLOAD_IMG_SUCCESS })
+    })
   }
 }

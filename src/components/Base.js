@@ -2,7 +2,7 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { addGroup, getGroups, getUsers } from '../actions'
+import { addGroup, getGroups, getGroup, getUsers } from '../actions'
 import Loader from './Loader'
 
 class Base extends React.Component {
@@ -19,8 +19,7 @@ class Base extends React.Component {
     }
   }
   render() {
-    const { user, groups, addGroup, loading } = this.props
-    console.log('selected index from base', this.props.params);
+    const { user, groups, getGroup, addGroup, loading } = this.props
     const selectIndex = this.props.params.groupId
     return (
       <div>
@@ -52,9 +51,10 @@ class Base extends React.Component {
             (groups && groups.length > 0 ?
             groups.map((g, index) => (
               <div onClick={() => {
-                browserHistory.push('/chat/' + index)
-              }} key={index} className={index === parseInt(selectIndex) ? 'chat active' : 'chat'}>
-                <div className='picture'></div>
+                getGroup(g._id)
+                browserHistory.push('/chat/' + g._id)
+              }} key={index} className={g._id === selectIndex ? 'chat active' : 'chat'}>
+                <div style={ g.img_url ? {background: `url(${g.img_url})`, backgroundSize: 'cover'} : null } className='picture'></div>
                 <div className='name'>{g.groupName}</div>
               </div>
             )) :
@@ -89,7 +89,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     addGroup: bindActionCreators(addGroup, dispatch),
-    getGroups: bindActionCreators(getGroups, dispatch)
+    getGroups: bindActionCreators(getGroups, dispatch),
+    getGroup: bindActionCreators(getGroup, dispatch)
   }
 }
 
