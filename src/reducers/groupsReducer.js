@@ -1,11 +1,11 @@
 import { merge } from 'lodash'
-import { ADD_GROUP, GET_GROUPS, RECEIVE_GROUPS } from '../actions/groupActions'
+import { ADD_GROUP_SUCCESS, GET_GROUPS, RECEIVE_GROUPS } from '../actions/groupActions'
 
 export default (state = {
   groups: []
 }, action) => {
   switch (action.type) {
-    case ADD_GROUP:
+    case ADD_GROUP_SUCCESS:
       const groupsCopy =  merge({}, state)
       groupsCopy.groups.push(action.group)
       return groupsCopy

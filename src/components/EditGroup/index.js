@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { getUsers, getGroup, updateGroup, uploadImg } from '../../actions'
+import { getMembers, getGroup, updateGroup, uploadImg } from '../../actions'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
 
@@ -10,17 +10,15 @@ class EditGroup extends React.Component {
     super(props)
     this.state = {
       addMember: false,
+      loadingMembers: props.loadingMembers,
       email: "",
-      img_url: props.group.img_url || "",
-      groupName: props.group.groupName,
-      members: []
+      img_url: props.group && props.group.img_url || "",
+      groupName: props.group && props.group.groupName,
+      members: props.members
     }
   }
-  componentDidMount() {
-    this.props.getUsers()
-  }
   render() {
-    const { group, users, loading, submit, uploadImg, loading_img } = this.props
+    const { group, users, loading, submit, uploadImg, loading_img, loadingMembers } = this.props
     return (
       <div className='settingsContainer'>
         {
@@ -59,14 +57,14 @@ class EditGroup extends React.Component {
             </thead>
             <tbody>
               {
-                loading ?
+                this.state.loadingMembers ?
                 <tr><td>Loading...</td></tr> :
                 (
                   this.state.members && this.state.members.length > 0 ?
                   this.state.members.map((i, index) => (
                     <tr key={index}>
-                      <td>{i.firstname + ' ' + i.surname}</td>
-                      <td><input value={this.state.members[index].isAdmin} onClick={() => {
+                      <td>{i.email}</td>
+                      <td><input checked={this.state.members[index].isAdmin} onChange={() => {
                         this.state.members[index]["isAdmin"] = !this.state.members[index]["isAdmin"]
                         this.setState(this.state)
                       }} type="checkbox"/></td>
@@ -143,18 +141,21 @@ class EditGroup extends React.Component {
   }
 }
 function mapStateToProps(state, ownProps) {
-  const { users, loading } = state.users
+
   const { loading_img, group } = state.group
+  const { users, members, loading } = state.members
   return {
     users,
     group,
     loading_img,
+    members,
+    loadingMembers: state.members.loading
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    getUsers: bindActionCreators(getUsers, dispatch),
+    getMembers: bindActionCreators(getMembers, dispatch),
     getGroup: bindActionCreators(getGroup, dispatch),
     submit: bindActionCreators(updateGroup, dispatch),
     uploadImg: bindActionCreators(uploadImg, dispatch)

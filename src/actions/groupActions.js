@@ -9,9 +9,11 @@ export function updateGroup(group) {
 }
 
 export const ADD_GROUP = "ADD_GROUP"
+export const ADD_GROUP_SUCCESS = "ADD_GROUP_SUCCESS"
 
 export function addGroup(group, user) {
   return dispatch => {
+    dispatch({ type: ADD_GROUP })
     fetch('http://localhost:3000/groups', {
       method: 'POST',
       body: JSON.stringify({groupName: group, email: user }),
@@ -20,9 +22,9 @@ export function addGroup(group, user) {
         'Content-Type': 'application/json',
       }
     })
-    .then(response => {
-      console.log('response from add group', response);
-      dispatch({ type: ADD_GROUP, group: {groupName: group, email: user } })
+    .then(response => response.json())
+    .then(json => {
+      dispatch({ type: ADD_GROUP_SUCCESS, group: {_id: json.groupId, groupName: group, email: user } })
       swal({
         type: 'success',
         html: 'You added : ' + group

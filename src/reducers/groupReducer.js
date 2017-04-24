@@ -2,7 +2,7 @@ import { merge } from 'lodash'
 import { GET_GROUP, RECEIVE_GROUP, UPLOAD_IMG, UPLOAD_IMG_SUCCESS } from '../actions/groupActions'
 
 export default (state = {
-  groups: []
+  group: {}
 }, action) => {
   switch (action.type) {
     case GET_GROUP:

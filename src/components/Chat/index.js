@@ -1,88 +1,43 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
-import { getGroup } from '../../actions'
+import { getMembers } from '../../actions'
 import { bindActionCreators } from 'redux'
+import ChatContainer from './chat-container'
+import NewMessage from './new-message'
 
 class Chat extends React.Component {
   constructor(props) {
     super(props)
   }
 
-  componentWillMount() {
-
+  componentDidMount() {
+    this.props.getMembers(this.props.params.groupId)
   }
 
   render() {
-    const { loading, group } = this.props
+    const { loadingMembers, loading, group } = this.props
     return (
       <div>
-        <div className="chatInfo">
-          <div onClick={() => {
-            browserHistory.push('/edit-group/'+ this.props.params.groupId)
-          }} className="editGroup">SETTINGS</div>
-          <div className="chatName">{
-            loading ?
-            "Loading..." :
-            group && group.groupName
-          }</div>
-        </div>
-
-        <div className="chatContainer">
-
-          <div className="message">
-            <div className="initials">JB</div>
-            <div className="text">
-              <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-              <div>11:05</div>
-            </div>
-          </div>
-
-          <div className="message other">
-            <div className="initials">SJ</div>
-            <div className="text">
-              <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-              <div>11:05</div>
-            </div>
-          </div>
-
-          <div className="message other">
-            <div className="initials">SJ</div>
-            <div className="text">
-              <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-              <div>11:05</div>
-            </div>
-          </div>
-
-          <div className="message">
-            <div className="initials">JB</div>
-            <div className="text">
-              <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-              <div>11:05</div>
-            </div>
-          </div>
-
-        </div>
-
-        <div className="newMessage">
-
-          <textarea placeholder="Type your message here..."></textarea>
-
-          <div className="indicator">
-
-            <div>
-              <div className="eyes">
-                <div></div>
-                <div></div>
-              </div>
-              <div className="mouth"></div>
+        {
+          loadingMembers ?
+          <p>Loading...</p> :
+          <div>
+            <div className="chatInfo">
+              <div onClick={() => {
+                browserHistory.push('/edit-group/'+ this.props.params.groupId)
+              }} className="editGroup">SETTINGS</div>
+              <div className="chatName">{
+                loading ?
+                "Loading..." :
+                group && group.groupName
+              }</div>
             </div>
 
+            <ChatContainer/>
+            <NewMessage/>
           </div>
-
-          <div className="send">Send</div>
-
-        </div>
+        }
       </div>
     )
   }
@@ -90,10 +45,19 @@ class Chat extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   const { group, loading } = state.group
+  const { members } = state.members
   return {
     group,
-    loading
+    loading,
+    members,
+    loadingMembers: state.members && state.members.loading
   }
 }
 
-export default connect(mapStateToProps)(Chat)
+function mapDispatchToProps(dispatch) {
+  return {
+    getMembers: bindActionCreators(getMembers, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat)
