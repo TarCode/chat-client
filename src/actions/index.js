@@ -14,7 +14,8 @@ import {
 
 import {
   postMessage,
-  checkSentiment
+  checkSentiment,
+  getMessages
 } from './messageActions'
 
 import { getMembers } from './memberActions'
@@ -29,6 +30,7 @@ export {
   updateGroup,
   uploadImg,
   postMessage,
+  getMessages,
   getMembers,
   checkSentiment
 }

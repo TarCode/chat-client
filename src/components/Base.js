@@ -2,7 +2,7 @@ import React from 'react'
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { addGroup, getGroups, getGroup, getUsers } from '../actions'
+import { addGroup, getGroups, getUsers, getMessages } from '../actions'
 import Loader from './Loader'
 
 class Base extends React.Component {
@@ -19,7 +19,7 @@ class Base extends React.Component {
     }
   }
   render() {
-    const { user, groups, getGroup, addGroup, loading } = this.props
+    const { user, groups, getMessages, addGroup, loading } = this.props
     const selectIndex = this.props.params.groupId
     return (
       <div>
@@ -51,7 +51,7 @@ class Base extends React.Component {
             (groups && groups.length > 0 ?
             groups.map((g, index) => (
               <div onClick={() => {
-                getGroup(g._id)
+                getMessages(g._id)
                 browserHistory.push('/chat/' + g._id)
               }} key={index} className={g._id === selectIndex ? 'chat active' : 'chat'}>
                 <div style={ g.img_url ? {background: `url(${g.img_url})`, backgroundSize: 'cover'} : null } className='picture'></div>
@@ -90,7 +90,7 @@ function mapDispatchToProps(dispatch) {
   return {
     addGroup: bindActionCreators(addGroup, dispatch),
     getGroups: bindActionCreators(getGroups, dispatch),
-    getGroup: bindActionCreators(getGroup, dispatch)
+    getMessages: bindActionCreators(getMessages, dispatch)
   }
 }
 

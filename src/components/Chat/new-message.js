@@ -12,7 +12,7 @@ class NewMessageContainer extends React.Component {
   }
 
   render() {
-    const { checkSentiment, loadingSentiment, sentiment } = this.props
+    const { checkSentiment, loadingSentiment, sentiment, postMessage, postingMessage, groupId } = this.props
     return (
       <div className="newMessage">
 
@@ -38,12 +38,22 @@ class NewMessageContainer extends React.Component {
         </div>
 
         <div onClick={() => {
+          const message = {
+            user: "tarcode33@gmail.com",
+            message: this.state.message,
+            groupId
+          }
           if(sentiment && sentiment.sentiment == 'Negative') {
             swal({
               title: 'Are you sure?',
               text: 'We have detected that your message is potentially negative',
               showCancelButton: true
             })
+          } else {
+            console.log('message from message', message);
+            postMessage(message)
+            this.state.message = ""
+            this.setState(this.state)
           }
         }} className={!loadingSentiment && this.state.message.length > 0 ? "send active" : "send"}>Send</div>
 
@@ -53,10 +63,11 @@ class NewMessageContainer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { loadingSentiment, sentiment } = state.message
+  const { postingMessage, loadingSentiment, sentiment } = state.message
   return {
     loadingSentiment,
-    sentiment
+    sentiment,
+    postingMessage
   }
 }
 

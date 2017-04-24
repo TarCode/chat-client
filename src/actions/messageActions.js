@@ -4,7 +4,7 @@ export const POST_MESSAGE_ERROR = "POST_MESSAGE_ERROR"
 
 export function postMessage(messageObject) {
   return dispatch => {
-    dispatch({ type: POST_MESSAGE})
+    dispatch({ type: POST_MESSAGE })
     fetch('http://localhost:3000/message', {
       method: 'POST',
       body: JSON.stringify(messageObject),
@@ -15,6 +15,7 @@ export function postMessage(messageObject) {
     })
     .then(response => {
       console.log('response from message', response);
+      dispatch({ type: POST_MESSAGE_SUCCESS })
     })
   }
 }
@@ -39,6 +40,24 @@ export function checkSentiment(msg) {
     .then(json => {
       console.log('respones json', json);
       dispatch({ type: CHECK_SENTIMENT_SUCCESS, sentiment: JSON.parse(json.text).result})
+    })
+  }
+}
+
+export const GET_MESSAGES = "GET_MESSAGES"
+export const RECEIVE_MESSAGES = "RECEIVE_MESSAGES"
+
+export function getMessages(groupId) {
+  return dispatch => {
+    dispatch({ type: GET_MESSAGES })
+    fetch('http://localhost:3000/messages/' + groupId)
+    .then(response => response.json())
+    .then(json => {
+      console.log('messages from member request', json);
+      dispatch({
+        type: RECEIVE_MESSAGES,
+        messages: json
+      })
     })
   }
 }

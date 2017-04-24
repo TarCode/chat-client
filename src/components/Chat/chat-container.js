@@ -1,16 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { getMessages } from '../../actions'
+import Loader from '../Loader'
 
-const MessagesComponent = ({ messages }) => (
+const MessagesComponent = ({ loadingMessages, messages }) => (
   <div className="chatContainer">
-    <div className="message">
-      <div className="initials">JB</div>
-      <div className="text">
-        <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-        <div>11:05</div>
-      </div>
-    </div>
+    {
+      loadingMessages ?
+      <Loader/> :
+      (
+        messages && messages.length > 0 ?
+        (
+          messages.map((m, i) => (
+            <div key={i} className="message">
+              <div className="initials">JB</div>
+              <div className="text">
+                <div>{m.message}</div>
+                <div>11:05</div>
+              </div>
+            </div>
+          ))
+        ) :
+        <h3>No messages yet</h3>
+      )
+    }
 
     <div className="message other">
       <div className="initials">SJ</div>
@@ -26,24 +40,30 @@ class MessagesContainer extends React.Component {
     super(props)
   }
 
+  componentDidMount() {
+    const { getMessages } = this.props
+    getMessages(this.props.groupId)
+  }
+
   render() {
-    const { messages } = this.props
+    const { messages, loadingMessages } = this.props
     return (
-      <MessagesComponent messages={messages}/>
+      <MessagesComponent loadingMessages={loadingMessages} messages={messages}/>
     )
   }
 }
 
 function mapStateToProps(state) {
-
+  const { messages, loadingMessages } = state.messages
   return {
-
+    loadingMessages,
+    messages
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-
+    getMessages: bindActionCreators(getMessages, dispatch)
   }
 }
 
