@@ -42,8 +42,16 @@ export function setPassword(password) {
         'Content-Type': 'application/json',
       }
     })
-    .then(response => {
-      console.log('response from password', response);
+    .then(response => response.json())
+    .then(json => {
+      console.log('response', json);
+      if(json.email) {
+        dispatch({ type: SET_PASSWORD_SUCCESS, user: json })
+        browserHistory.push('/')
+      }
+    })
+    .catch(err => {
+      dispatch({ type: SET_PASSWORD_ERROR, err })
     })
   }
 }
@@ -65,8 +73,11 @@ export function login(user) {
     })
     .then(response => response.json())
     .then(json => {
-      dispatch({ type: LOGIN_SUCCESS, user: json.user })
+      dispatch({ type: LOGIN_SUCCESS, user: json })
       browserHistory.push('/')
+    })
+    .catch(err => {
+      dispatch({ type: LOGIN_ERROR, err })
     })
   }
 }

@@ -4,8 +4,10 @@ import { bindActionCreators } from 'redux'
 import { getMessages } from '../../actions'
 import Loader from '../Loader'
 import io from 'socket.io-client'
+import moment from 'moment'
 const socketEndpoint = 'http://localhost:3000'
-const MessagesComponent = ({ loadingMessages, messages }) => (
+
+const MessagesComponent = ({ loadingMessages, messages, user }) => (
   <div className="chatContainer">
     {
       loadingMessages ?
@@ -13,12 +15,12 @@ const MessagesComponent = ({ loadingMessages, messages }) => (
       (
         messages && messages.length > 0 ?
         (
-          messages.map((m, i) => (
-            <div key={i} className="message">
-              <div className="initials">JB</div>
+          messages.sort((a, b) => ( new Date(a.timestamp) - new Date(b.timestamp))).map((m, i) => (
+            <div key={i} className={user && user.email == m.user.email ? "message" : "message other"}>
+              <div className="initials">{m.user.firstname[0] +  m.user.surname[0]}</div>
               <div className="text">
                 <div>{m.message}</div>
-                <div>11:05</div>
+                <div>{moment(m.timestamp).fromNow()}</div>
               </div>
             </div>
           ))
@@ -27,13 +29,6 @@ const MessagesComponent = ({ loadingMessages, messages }) => (
       )
     }
 
-    <div className="message other">
-      <div className="initials">SJ</div>
-      <div className="text">
-        <div>This is a test message. This is a test message. This is a test message. This is a test message.</div>
-        <div>11:05</div>
-      </div>
-    </div>
   </div>
 )
 class MessagesContainer extends React.Component {
@@ -51,9 +46,10 @@ class MessagesContainer extends React.Component {
   }
 
   render() {
-    const { messages, loadingMessages } = this.props
+    const { messages, loadingMessages, user } = this.props
+    console.log('user from chat container', user);
     return (
-      <MessagesComponent loadingMessages={loadingMessages} messages={messages}/>
+      <MessagesComponent user={user} loadingMessages={loadingMessages} messages={messages}/>
     )
   }
 }

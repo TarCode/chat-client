@@ -9,7 +9,8 @@ import {
   getGroups,
   addGroup,
   updateGroup,
-  uploadImg
+  uploadImg,
+  changeGroupName
 } from './groupActions'
 
 import {
@@ -18,8 +19,6 @@ import {
   getMessages
 } from './messageActions'
 
-import { getMembers } from './memberActions'
-
 export {
   getUsers,
   setPassword,
@@ -27,10 +26,10 @@ export {
   getGroup,
   getGroups,
   addGroup,
+  changeGroupName,
   updateGroup,
   uploadImg,
   postMessage,
   getMessages,
-  getMembers,
   checkSentiment
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getMembers } from '../../actions'
 import { bindActionCreators } from 'redux'
 import ChatContainer from './chat-container'
 import NewMessage from './new-message'
@@ -12,23 +11,16 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.getMembers(this.props.params.groupId)
+
   }
 
   render() {
-    const { loadingMembers, loading, group } = this.props
+    const { loading, group, user } = this.props
     return (
       <div>
-        {
-          loadingMembers ?
-          <p>Loading...</p> :
-          <div>
-            <GroupHeader groupId={this.props.params.groupId}/>
-
-            <ChatContainer groupId={this.props.params.groupId}/>
-            <NewMessage groupId={this.props.params.groupId}/>
-          </div>
-        }
+        <GroupHeader  groupId={this.props.params.groupId}/>
+        <ChatContainer user={user} groupId={this.props.params.groupId}/>
+        <NewMessage user={user} groupId={this.props.params.groupId}/>
       </div>
     )
   }
@@ -36,18 +28,16 @@ class Chat extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   const { group, loading } = state.group
-  const { members } = state.members
+  const { user } = state.user
   return {
+    user,
     group,
-    loading,
-    members,
-    loadingMembers: state.members && state.members.loading
+    loading
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    getMembers: bindActionCreators(getMembers, dispatch)
   }
 }
 

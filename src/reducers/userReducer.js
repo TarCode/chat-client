@@ -1,11 +1,16 @@
 import { merge } from 'lodash'
-import { GET_USERS, RECEIVE_USERS, LOGIN, LOGIN_SUCCESS } from '../actions/userActions'
+import { GET_USERS, RECEIVE_USERS, LOGIN, LOGIN_SUCCESS, SET_PASSWORD_SUCCESS } from '../actions/userActions'
 
-export default (state = { user: "tarcode33@gmail.com"}, action) => {
+export default (state = {user: {
+  email: "tarcode33@gmail.com",
+  firstname: 'Test',
+  surname: 'User 1'
+}}, action) => {
   switch (action.type) {
     case LOGIN:
       return merge({}, { loading: true })
     case LOGIN_SUCCESS:
+    case SET_PASSWORD_SUCCESS:
       return merge({}, {
         user: action.user
       })

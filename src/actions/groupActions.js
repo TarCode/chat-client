@@ -8,6 +8,14 @@ export function updateGroup(group) {
   }
 }
 
+export const CHANGE_GROUP_NAME = "CHANGE_GROUP_NAME"
+
+export function changeGroupName(groupName) {
+  return dispatch => {
+    dispatch({ type: CHANGE_GROUP_NAME, groupName })
+  }
+}
+
 export const ADD_GROUP = "ADD_GROUP"
 export const ADD_GROUP_SUCCESS = "ADD_GROUP_SUCCESS"
 
@@ -16,7 +24,7 @@ export function addGroup(group, user) {
     dispatch({ type: ADD_GROUP })
     fetch('http://localhost:3000/groups', {
       method: 'POST',
-      body: JSON.stringify({groupName: group, email: user }),
+      body: JSON.stringify({groupName: group, email: user.email, firstname: user.firstname, surname: user.surname }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

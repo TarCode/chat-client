@@ -1,30 +1,32 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
-import { getMembers, getGroup, updateGroup, uploadImg } from '../../actions'
+import { getMembers, getGroup, updateGroup, uploadImg, changeGroupName, getUsers } from '../../actions'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
+import Members from './members'
 
 class EditGroup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       addMember: false,
-      loadingMembers: props.loadingMembers,
       email: "",
       img_url: props.group && props.group.img_url || "",
-      groupName: props.group && props.group.groupName,
       members: props.members
     }
   }
+
+  componentDidMount() {
+    this.props.getUsers()
+  }
   render() {
-    const { group, users, loading, submit, uploadImg, loading_img, loadingMembers } = this.props
+    const { group, users, loading, submit, uploadImg, loading_img, changeGroupName } = this.props
     return (
       <div className='settingsContainer'>
         {
           loading_img ?
           <Loader/> :
-          <div style={ this.state.img_url && this.state.img_url.length > 0 ? {background: `url(${this.state.img_url && this.state.img_url})`, backgroundSize: 'cover'} : null} className='profilePicture'>
+          <div style={ group && group.img_url && group.img_url.length > 0 ? {background: `url(${group && group.img_url})`, backgroundSize: 'cover'} : null} className='profilePicture'>
             <input onChange={(e) => {
               console.log('this is the file', e.target);
               let reader = new FileReader();
@@ -42,97 +44,19 @@ class EditGroup extends React.Component {
             }} type="file"/>
           </div>
         }
-        <input value={this.state.groupName} onChange={(e) => {
-          this.state.groupName = e.target.value
-          this.setState(this.state)
-        }} type='text' name='name' placeholder="Group Name"/>
-
-        <div className='members'>
-          <table>
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Admin</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                this.state.loadingMembers ?
-                <tr><td>Loading...</td></tr> :
-                (
-                  this.state.members && this.state.members.length > 0 ?
-                  this.state.members.map((i, index) => (
-                    <tr key={index}>
-                      <td>{i.email}</td>
-                      <td><input checked={this.state.members[index].isAdmin} onChange={() => {
-                        this.state.members[index]["isAdmin"] = !this.state.members[index]["isAdmin"]
-                        this.setState(this.state)
-                      }} type="checkbox"/></td>
-                    </tr>
-                  )) :
-                  <tr><td>No members</td></tr>
-                )
-              }
-            </tbody>
-          </table>
-          {
-            this.state.addMember ?
-            <div>
-              <input value={this.state.email} onChange={(e) => {
-                this.state.email = e.target.value
-                this.setState(this.state)
-              }}/>
-              <div onClick={() => {
-                let letAdd = false
-                let memberToAdd = null
-                users && users.length > 0 ?
-                users.map(u => {
-                  if(this.state.email === u.email) {
-                    letAdd = true
-                    memberToAdd = u
-                  }
-                }) :
-                swal({
-                  title: 'Error!',
-                  text: 'User not found',
-                  type: 'error',
-                  confirmButtonText: 'Okay'
-                })
-                if(letAdd) {
-                  this.state.members.push(memberToAdd)
-                  this.state.email = ""
-                  this.state.addMember = false
-                  this.setState(this.state)
-                } else {
-                  swal({
-                    title: 'Error!',
-                    text: 'Please enter a valid email',
-                    type: 'error',
-                    confirmButtonText: 'Okay'
-                  })
-                }
-              }} className='save btn'>Add</div>
-            </div> :
-            null
-          }
-          {
-            this.state.addMember ?
-            <div onClick={() => {
-              this.state.addMember = false
-              this.setState(this.state)
-            }} className='add'>Cancel</div> :
-            <div onClick={() => {
-              this.state.addMember = true
-              this.setState(this.state)
-            }} className='add'>Add Member</div>
-          }
-        </div>
+        {
+          group && group.groupName ?
+          <input value={group && group.groupName} onChange={(e) => {
+            changeGroupName(e.target.value)
+          }} type='text' placeholder="Group Name"/> :
+          <Loader/>
+        }
+        <Members members={group && group.members}/>
         <div>
           <div onClick={() => {
             // submit({
             //   groupName: this.state.groupName,
             //   members: this.state.members,
-            //   groupIndex: this.props.groupIndex || null
             // })
           }} className='save btn'>Save Group</div>
         </div>
@@ -141,21 +65,17 @@ class EditGroup extends React.Component {
   }
 }
 function mapStateToProps(state, ownProps) {
-
   const { loading_img, group } = state.group
-  const { users, members, loading } = state.members
   return {
-    users,
     group,
-    loading_img,
-    members,
-    loadingMembers: state.members.loading
+    loading_img
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    getMembers: bindActionCreators(getMembers, dispatch),
+    getUsers: bindActionCreators(getUsers, dispatch),
+    changeGroupName: bindActionCreators(changeGroupName, dispatch),
     getGroup: bindActionCreators(getGroup, dispatch),
     submit: bindActionCreators(updateGroup, dispatch),
     uploadImg: bindActionCreators(uploadImg, dispatch)

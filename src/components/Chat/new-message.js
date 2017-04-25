@@ -12,7 +12,7 @@ class NewMessageContainer extends React.Component {
   }
 
   render() {
-    const { checkSentiment, loadingSentiment, sentiment, postMessage, postingMessage, groupId } = this.props
+    const { checkSentiment, loadingSentiment, sentiment, postMessage, postingMessage, groupId, user } = this.props
     return (
       <div className="newMessage">
 
@@ -39,11 +39,12 @@ class NewMessageContainer extends React.Component {
 
         <div onClick={() => {
           const message = {
-            user: "tarcode33@gmail.com",
+            user,
             message: this.state.message,
+            timestamp: new Date(),
             groupId
           }
-          if(sentiment && sentiment.sentiment == 'Negative') {
+          if(sentiment && sentiment.confidence > 79) {
             swal({
               title: 'Are you sure?',
               text: 'We have detected that your message is potentially negative',
@@ -56,6 +57,9 @@ class NewMessageContainer extends React.Component {
                 this.state.message = ""
                 this.setState(this.state)
               }
+            })
+            .catch(err => {
+              console.log('cancelled');
             })
           } else {
             console.log('message from message', message);

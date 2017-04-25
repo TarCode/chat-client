@@ -1,5 +1,5 @@
 import { merge } from 'lodash'
-import { GET_GROUP, RECEIVE_GROUP, UPLOAD_IMG, UPLOAD_IMG_SUCCESS } from '../actions/groupActions'
+import { GET_GROUP, RECEIVE_GROUP, UPLOAD_IMG, UPLOAD_IMG_SUCCESS, CHANGE_GROUP_NAME } from '../actions/groupActions'
 
 export default (state = {
   group: {}
@@ -20,6 +20,12 @@ export default (state = {
     case UPLOAD_IMG_SUCCESS:
       return merge({}, state, {
         loading_img: false
+      })
+    case CHANGE_GROUP_NAME:
+      return merge({}, state, {
+        group: {
+          groupName: action.groupName
+        }
       })
     default:
       return state
