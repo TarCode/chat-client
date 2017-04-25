@@ -4,10 +4,15 @@ import { bindActionCreators } from 'redux'
 import ChatContainer from './chat-container'
 import NewMessage from './new-message'
 import GroupHeader from './group-header'
+import { getGroup } from '../../actions'
 
 class Chat extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    this.props.getGroup(this.props.params.groupId)
   }
 
   render() {
@@ -34,6 +39,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    getGroup: bindActionCreators(getGroup, dispatch)
   }
 }
 

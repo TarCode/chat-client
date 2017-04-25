@@ -1,19 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getGroup } from '../../actions'
 import { browserHistory } from 'react-router'
 
-let GroupHeader = ({ getGroup, loading, group, groupId }) => (
+let GroupHeader = ({ group, loading, groups, groupId }) => (
   <div className="chatInfo">
     <div onClick={() => {
-      getGroup(groupId)
       browserHistory.push('/edit-group/'+ groupId)
     }} className="editGroup">SETTINGS</div>
     <div className="chatName">{
       loading ?
       "Loading..." :
-      group && group.filter(g => g._id === groupId)[0].groupName
+      groups && groups.length > 0 && groups.filter(g => g._id === groupId)[0].groupName || group && group.groupName
     }</div>
   </div>
 )
@@ -23,23 +21,18 @@ class GroupHeaderContainer extends React.Component {
     super(props)
   }
   render() {
-    const { getGroup, groups, groupId, loading } = this.props
+    const { groups, groupId, loading } = this.props
     return (
-      <GroupHeader getGroup={getGroup} loading={loading} groupId={groupId} group={groups}/>
+      <GroupHeader loading={loading} groupId={groupId} groups={groups}/>
     )
   }
 }
 function mapStateToProps(state) {
   const { groups } = state.groups
+  const { group } = state.group
   return {
     groups
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    getGroup: bindActionCreators(getGroup, dispatch)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(GroupHeaderContainer)
+export default connect(mapStateToProps)(GroupHeaderContainer)

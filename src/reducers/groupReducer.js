@@ -29,13 +29,13 @@ export default (state = {
       })
     case ADD_GROUP_MEMBER:
       state.group.members.push(action.member)
-      return state
+      return merge({}, state)
     case REMOVE_GROUP_MEMBER:
       state.group.members.splice(action.index, 1)
-      return state
+      return merge({}, state)
     case SET_GROUP_ADMIN:
       state.group.members[action.index].isAdmin = !state.group.members[action.index].isAdmin
-      return state
+      return merge({}, state)
     default:
       return state
   }
