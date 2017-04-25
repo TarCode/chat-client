@@ -47,7 +47,6 @@ class MessagesContainer extends React.Component {
 
   render() {
     const { messages, loadingMessages, user } = this.props
-    console.log('user from chat container', user);
     return (
       <MessagesComponent user={user} loadingMessages={loadingMessages} messages={messages}/>
     )

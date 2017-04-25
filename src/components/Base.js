@@ -11,7 +11,6 @@ class Base extends React.Component {
   }
 
   componentDidMount() {
-    console.log('props from base', this.props);
     if(!this.props.user) {
       browserHistory.push('/login')
     } else {

@@ -17,7 +17,6 @@ export function postUpdateGroup(group) {
     })
     .then(response => response.json())
     .then(json => {
-      console.log('response from update group', json);
       dispatch({ type: POST_UPDATE_GROUP_SUCCESS })
       browserHistory.push('/')
     })

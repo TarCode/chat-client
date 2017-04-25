@@ -10,10 +10,6 @@ class Chat extends React.Component {
     super(props)
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     const { loading, group, user } = this.props
     return (

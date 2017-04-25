@@ -18,7 +18,6 @@ class NewMessageContainer extends React.Component {
 
         <textarea value={this.state.message} onChange={(e) => {
           this.state.message = e.target.value
-          console.log('something', loadingSentiment);
           if(this.state.message.length > 2 && !loadingSentiment) {
             checkSentiment(this.state.message)
           }
@@ -51,7 +50,6 @@ class NewMessageContainer extends React.Component {
               showCancelButton: true
             })
             .then(result => {
-              console.log('result from check message', result);
               if(result) {
                 postMessage(message)
                 this.state.message = ""
@@ -62,7 +60,6 @@ class NewMessageContainer extends React.Component {
               console.log('cancelled');
             })
           } else {
-            console.log('message from message', message);
             postMessage(message)
             this.state.message = ""
             this.setState(this.state)

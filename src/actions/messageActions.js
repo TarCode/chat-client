@@ -14,7 +14,6 @@ export function postMessage(messageObject) {
       }
     })
     .then(response => {
-      console.log('response from message', response);
       dispatch({ type: POST_MESSAGE_SUCCESS })
     })
   }
@@ -25,7 +24,6 @@ export const CHECK_SENTIMENT_SUCCESS = "CHECK_SENTIMENT_SUCCESS"
 export const CHECK_SENTIMENT_ERROR = "CHECK_SENTIMENT_ERROR"
 
 export function checkSentiment(msg) {
-  console.log('message before sentiment', msg);
   return dispatch => {
     dispatch({ type: CHECK_SENTIMENT})
     fetch('http://localhost:3000/check-sentiment', {
@@ -53,7 +51,6 @@ export function getMessages(groupId) {
     fetch('http://localhost:3000/messages/' + groupId)
     .then(response => response.json())
     .then(json => {
-      console.log('messages from member request', json);
       dispatch({
         type: RECEIVE_MESSAGES,
         messages: json
