@@ -4,7 +4,7 @@ export const POST_UPDATE_GROUP = "POST_UPDATE_GROUP"
 export const POST_UPDATE_GROUP_SUCCESS = "POST_UPDATE_GROUP_SUCCESS"
 export const POST_UPDATE_GROUP_ERROR = "POST_UPDATE_GROUP_ERROR"
 
-export function postUpdateGroup(group) {
+export function postUpdateGroup(group, email) {
   return dispatch => {
     dispatch({ type: POST_UPDATE_GROUP })
     fetch('http://localhost:3000/groups/update', {
@@ -18,6 +18,14 @@ export function postUpdateGroup(group) {
     .then(response => response.json())
     .then(json => {
       dispatch({ type: POST_UPDATE_GROUP_SUCCESS })
+      fetch('http://localhost:3000/groups/'+ email)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({
+          type: RECEIVE_GROUPS,
+          groups: json
+        })
+      })
       browserHistory.push('/')
     })
     .catch(err => {

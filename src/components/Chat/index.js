@@ -5,6 +5,7 @@ import ChatContainer from './chat-container'
 import NewMessage from './new-message'
 import GroupHeader from './group-header'
 import { getGroup } from '../../actions'
+import Loader from '../Loader'
 
 class Chat extends React.Component {
   constructor(props) {
@@ -19,9 +20,15 @@ class Chat extends React.Component {
     const { loading, group, user } = this.props
     return (
       <div>
-        <GroupHeader  groupId={this.props.params.groupId}/>
-        <ChatContainer user={user} groupId={this.props.params.groupId}/>
-        <NewMessage user={user} groupId={this.props.params.groupId}/>
+        {
+          loading ?
+          <Loader/> :
+          <div>
+            <GroupHeader  groupId={this.props.params.groupId}/>
+            <ChatContainer user={user} groupId={this.props.params.groupId}/>
+            <NewMessage user={user} groupId={this.props.params.groupId}/>
+          </div>
+        }
       </div>
     )
   }

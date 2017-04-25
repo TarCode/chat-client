@@ -20,55 +20,65 @@ class EditGroup extends React.Component {
     this.props.getUsers()
   }
   render() {
-    const { users, group, loading, submit, uploadImg, loading_img, changeGroupName } = this.props
+    const { user, users, group, loading, submit, uploadImg, loading_img, changeGroupName } = this.props
+    const email = user && user.email
     return (
-      <div className='settingsContainer'>
+      <div>
         {
-          loading_img ?
+          loading ?
           <Loader/> :
-          <div style={ group && group.img_url && group.img_url.length > 0 ? {background: `url(${group && group.img_url})`, backgroundSize: 'cover'} : null} className='profilePicture'>
-            <input onChange={(e) => {
-              console.log('this is the file', e.target);
-              let reader = new FileReader();
-               let file = e.target.files[0];
+          <div className='settingsContainer'>
+            {
+              loading_img ?
+              <Loader/> :
+              <div style={ group && group.img_url && group.img_url.length > 0 ? {background: `url(${group && group.img_url})`, backgroundSize: 'cover'} : null} className='profilePicture'>
+                <input onChange={(e) => {
+                  console.log('this is the file', e.target);
+                  let reader = new FileReader();
+                   let file = e.target.files[0];
 
-               reader.onloadend = () => {
-                 this.state.img_url = {
-                   file: file,
-                   imagePreviewUrl: reader.result
-                 }
-                 uploadImg(file, group.groupName)
-                 this.setState(this.state);
-               }
-               reader.readAsDataURL(file)
-            }} type="file"/>
+                   reader.onloadend = () => {
+                     this.state.img_url = {
+                       file: file,
+                       imagePreviewUrl: reader.result
+                     }
+                     uploadImg(file, group.groupName)
+                     this.setState(this.state);
+                   }
+                   reader.readAsDataURL(file)
+                }} type="file"/>
+              </div>
+            }
+            {
+              group && group.groupName ?
+              <input value={group && group.groupName} onChange={(e) => {
+                changeGroupName(e.target.value)
+              }} type='text' placeholder="Group Name"/> :
+              <Loader/>
+            }
+            <Members users={users} />
+            <div>
+              <div onClick={() => {
+                console.log('save group', group);
+                submit(group, email )
+              }} className='save btn'>Save Group</div>
+            </div>
           </div>
         }
-        {
-          group && group.groupName ?
-          <input value={group && group.groupName} onChange={(e) => {
-            changeGroupName(e.target.value)
-          }} type='text' placeholder="Group Name"/> :
-          <Loader/>
-        }
-        <Members users={users} />
-        <div>
-          <div onClick={() => {
-            console.log('save group', group);
-            submit(group)
-          }} className='save btn'>Save Group</div>
-        </div>
       </div>
     )
   }
 }
 function mapStateToProps(state, ownProps) {
-  const { loading_img, group } = state.group
+  const { loading_img, group, loading } = state.group
   const { users } = state.users
+  const { user } = state.user
   return {
     group,
+    loading,
     loading_img,
-    users
+    users,
+    user
   }
 }
 
