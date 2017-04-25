@@ -135,3 +135,11 @@ export function removeGroupMember(index) {
     dispatch({ type: REMOVE_GROUP_MEMBER, index })
   }
 }
+
+export const SET_GROUP_ADMIN = "SET_GROUP_ADMIN"
+
+export function setGroupAdmin(index) {
+  return dispatch => {
+    dispatch({ type: SET_GROUP_ADMIN, index })
+  }
+}

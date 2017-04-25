@@ -2,9 +2,9 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
-import { addGroupMember, removeGroupMember } from '../../actions'
+import { addGroupMember, removeGroupMember, setGroupAdmin } from '../../actions'
 
-const Memberbody = ({ loading, group, removeGroupMember }) => (
+const Memberbody = ({ loading, group, removeGroupMember, setGroupAdmin }) => (
   <tbody>
     {
       loading ?
@@ -23,8 +23,19 @@ const Memberbody = ({ loading, group, removeGroupMember }) => (
                 })
               }
             }}>{i.email}</td>
-            <td><input checked={group.members[index].isAdmin} onChange={() => {
-              group.members[index]["isAdmin"] = !group.members[index]["isAdmin"]
+            <td><input checked={i.isAdmin} onChange={() => {
+              if(group.members.length === 1) {
+                if(i.isAdmin) {
+                  swal({
+                    type: 'error',
+                    html: 'Must have at least 1 group admin'
+                  })
+                } else {
+                  setGroupAdmin(index)
+                }
+              } else {
+                setGroupAdmin(index)
+              }
             }} type="checkbox"/></td>
           </tr>
         )) :
@@ -42,7 +53,7 @@ class Members extends React.Component {
     }
   }
   render() {
-    const { addGroupMember, removeGroupMember, loading, group, users } = this.props
+    const { addGroupMember, setGroupAdmin, removeGroupMember, loading, group, users } = this.props
     return (
       <div className='members'>
         <table>
@@ -52,7 +63,7 @@ class Members extends React.Component {
               <th>Admin</th>
             </tr>
           </thead>
-          <Memberbody loading={loading} removeGroupMember={removeGroupMember} group={group}/>
+          <Memberbody setGroupAdmin={setGroupAdmin} loading={loading} removeGroupMember={removeGroupMember} group={group}/>
         </table>
         {
           this.state.addMember ?
@@ -71,18 +82,23 @@ class Members extends React.Component {
                   memberToAdd = u
                 }
               })
-              if(letAdd) {
-                addGroupMember(memberToAdd)
-                this.state.email = ""
-                this.state.addMember = false
-                this.setState(this.state)
-              } else {
+              if(group.members.length === 1 && group.members[0].isAdmin === false) {
                 swal({
-                  title: 'Error!',
-                  text: 'User not found',
-                  type: 'error',
-                  confirmButtonText: 'Okay'
+                  html: 'User not found',
+                  type: 'error'
                 })
+              } else {
+                if(letAdd) {
+                  addGroupMember(memberToAdd)
+                  this.state.email = ""
+                  this.state.addMember = false
+                  this.setState(this.state)
+                } else {
+                  swal({
+                    html: 'Must have at least 1 group admin',
+                    type: 'error'
+                  })
+                }
               }
             }} className='save btn'>Add</div>
           </div> :
@@ -114,7 +130,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     addGroupMember: bindActionCreators(addGroupMember, dispatch),
-    removeGroupMember: bindActionCreators(removeGroupMember, dispatch)
+    removeGroupMember: bindActionCreators(removeGroupMember, dispatch),
+    setGroupAdmin: bindActionCreators(setGroupAdmin, dispatch)
   }
 }
 

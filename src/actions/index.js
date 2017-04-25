@@ -12,7 +12,8 @@ import {
   changeGroupName,
   addGroupMember,
   removeGroupMember,
-  postUpdateGroup
+  postUpdateGroup,
+  setGroupAdmin
 } from './groupActions'
 
 import {
@@ -31,6 +32,7 @@ export {
   changeGroupName,
   postUpdateGroup,
   addGroupMember,
+  setGroupAdmin,
   removeGroupMember,
   uploadImg,
   postMessage,
