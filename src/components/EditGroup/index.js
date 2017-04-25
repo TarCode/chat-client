@@ -35,7 +35,7 @@ class EditGroup extends React.Component {
                    file: file,
                    imagePreviewUrl: reader.result
                  }
-                 uploadImg(file, this.state.groupName)
+                 uploadImg(file, group.groupName)
                  this.setState(this.state);
                }
                reader.readAsDataURL(file)

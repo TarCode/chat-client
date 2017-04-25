@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getMessages } from '../../actions'
 import Loader from '../Loader'
-
+import io from 'socket.io-client'
+const socketEndpoint = 'http://localhost:3000'
 const MessagesComponent = ({ loadingMessages, messages }) => (
   <div className="chatContainer">
     {
@@ -43,6 +44,10 @@ class MessagesContainer extends React.Component {
   componentDidMount() {
     const { getMessages } = this.props
     getMessages(this.props.groupId)
+    const socket = io.connect(`${socketEndpoint}/messages`)
+    socket.on('receive', () => {
+      getMessages(this.props.groupId)
+    })
   }
 
   render() {

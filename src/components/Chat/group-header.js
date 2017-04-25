@@ -4,9 +4,10 @@ import { bindActionCreators } from 'redux'
 import { getGroup } from '../../actions'
 import { browserHistory } from 'react-router'
 
-let GroupHeader = ({ loading, group, groupId}) => (
+let GroupHeader = ({ getGroup, loading, group, groupId }) => (
   <div className="chatInfo">
     <div onClick={() => {
+      getGroup(groupId)
       browserHistory.push('/edit-group/'+ groupId)
     }} className="editGroup">SETTINGS</div>
     <div className="chatName">{
@@ -22,9 +23,9 @@ class GroupHeaderContainer extends React.Component {
     super(props)
   }
   render() {
-    const { groups, groupId, loading } = this.props
+    const { getGroup, groups, groupId, loading } = this.props
     return (
-      <GroupHeader loading={loading} groupId={groupId} group={groups}/>
+      <GroupHeader getGroup={getGroup} loading={loading} groupId={groupId} group={groups}/>
     )
   }
 }

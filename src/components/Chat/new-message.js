@@ -49,6 +49,14 @@ class NewMessageContainer extends React.Component {
               text: 'We have detected that your message is potentially negative',
               showCancelButton: true
             })
+            .then(result => {
+              console.log('result from check message', result);
+              if(result) {
+                postMessage(message)
+                this.state.message = ""
+                this.setState(this.state)
+              }
+            })
           } else {
             console.log('message from message', message);
             postMessage(message)
