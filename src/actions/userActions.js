@@ -13,7 +13,7 @@ export function getUsers() {
     .then(response => response.json())
     .then(json => {
       parseString(json.text, (err, parsed) => {
-        const userJson = parsed.Users.User.map(i => ({
+        const userJson = parsed && parsed.Users && parsed.Users.User.map(i => ({
           firstname: i.Name[0],
           surname: i.Surname[0],
           email: i.Email[0]

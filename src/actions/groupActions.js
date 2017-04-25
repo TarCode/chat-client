@@ -8,6 +8,37 @@ export function updateGroup(group) {
   }
 }
 
+export const POST_UPDATE_GROUP = "POST_UPDATE_GROUP"
+export const POST_UPDATE_GROUP_SUCCESS = "POST_UPDATE_GROUP_SUCCESS"
+export const POST_UPDATE_GROUP_ERROR = "POST_UPDATE_GROUP_ERROR"
+
+export function postUpdateGroup(group) {
+  return dispatch => {
+    dispatch({ type: POST_UPDATE_GROUP })
+    fetch('http://localhost:3000/groups/update', {
+      method: 'POST',
+      body: JSON.stringify(group),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log('response from update group', json);
+      dispatch({ type: POST_UPDATE_GROUP_SUCCESS })
+      browserHistory.push('/')
+    })
+    .catch(err => {
+      dispatch({ type: POST_UPDATE_GROUP_ERROR, err })
+      swal({
+        type: 'error',
+        html: 'Error updating : ' + group.groupName
+      })
+    })
+  }
+}
+
 export const CHANGE_GROUP_NAME = "CHANGE_GROUP_NAME"
 
 export function changeGroupName(groupName) {
@@ -94,5 +125,14 @@ export function uploadImg(file, name) {
       console.log('response', response);
       dispatch({ type: UPLOAD_IMG_SUCCESS })
     })
+  }
+}
+
+export const ADD_GROUP_MEMBER = "ADD_GROUP_MEMBER"
+
+export function addGroupMember(member) {
+  member['isAdmin'] = false
+  return dispatch => {
+    dispatch({ type: ADD_GROUP_MEMBER, member})
   }
 }

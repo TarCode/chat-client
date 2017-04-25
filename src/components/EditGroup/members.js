@@ -1,6 +1,5 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { getMembers, addMember } from '../../actions'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
 
@@ -13,7 +12,7 @@ export default class Members extends React.Component {
     }
   }
   render() {
-    const { loading, members, users } = this.props
+    const { addGroupMember, loading, members, users } = this.props
     return (
       <div className='members'>
         <table>
@@ -60,7 +59,7 @@ export default class Members extends React.Component {
                 }
               })
               if(letAdd) {
-                addMember(memberToAdd)
+                addGroupMember(memberToAdd)
                 this.state.email = ""
                 this.state.addMember = false
                 this.setState(this.state)

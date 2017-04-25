@@ -1,6 +1,6 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { getMembers, getGroup, updateGroup, uploadImg, changeGroupName, getUsers } from '../../actions'
+import { addGroupMember, getGroup, postUpdateGroup, uploadImg, changeGroupName, getUsers } from '../../actions'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
 import Members from './members'
@@ -20,7 +20,7 @@ class EditGroup extends React.Component {
     this.props.getUsers()
   }
   render() {
-    const { group, users, loading, submit, uploadImg, loading_img, changeGroupName } = this.props
+    const { group, users, loading, submit, uploadImg, loading_img, changeGroupName, addGroupMember } = this.props
     return (
       <div className='settingsContainer'>
         {
@@ -51,13 +51,11 @@ class EditGroup extends React.Component {
           }} type='text' placeholder="Group Name"/> :
           <Loader/>
         }
-        <Members members={group && group.members}/>
+        <Members users={users} addGroupMember={addGroupMember} members={group && group.members}/>
         <div>
           <div onClick={() => {
-            // submit({
-            //   groupName: this.state.groupName,
-            //   members: this.state.members,
-            // })
+            console.log('save group', group);
+            submit(group)
           }} className='save btn'>Save Group</div>
         </div>
       </div>
@@ -66,9 +64,11 @@ class EditGroup extends React.Component {
 }
 function mapStateToProps(state, ownProps) {
   const { loading_img, group } = state.group
+  const { users } = state.users
   return {
     group,
-    loading_img
+    loading_img,
+    users
   }
 }
 
@@ -77,7 +77,8 @@ function mapDispatchToProps(dispatch) {
     getUsers: bindActionCreators(getUsers, dispatch),
     changeGroupName: bindActionCreators(changeGroupName, dispatch),
     getGroup: bindActionCreators(getGroup, dispatch),
-    submit: bindActionCreators(updateGroup, dispatch),
+    submit: bindActionCreators(postUpdateGroup, dispatch),
+    addGroupMember: bindActionCreators(addGroupMember, dispatch),
     uploadImg: bindActionCreators(uploadImg, dispatch)
   }
 }
