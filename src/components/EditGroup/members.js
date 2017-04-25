@@ -95,7 +95,7 @@ class Members extends React.Component {
                   this.setState(this.state)
                 } else {
                   swal({
-                    html: 'Must have at least 1 group admin',
+                    html: 'User not found',
                     type: 'error'
                   })
                 }
