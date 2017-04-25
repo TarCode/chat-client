@@ -15,7 +15,7 @@ class Base extends React.Component {
     if(!this.props.user) {
       browserHistory.push('/login')
     } else {
-      this.props.getGroups()
+      this.props.getGroups(this.props.user.email)
     }
   }
   render() {

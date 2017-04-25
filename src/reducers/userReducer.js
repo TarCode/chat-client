@@ -1,11 +1,7 @@
 import { merge } from 'lodash'
 import { GET_USERS, RECEIVE_USERS, LOGIN, LOGIN_SUCCESS, SET_PASSWORD_SUCCESS } from '../actions/userActions'
 
-export default (state = {user: {
-  email: "tarcode33@gmail.com",
-  firstname: 'Test',
-  surname: 'User 1'
-}}, action) => {
+export default (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
       return merge({}, { loading: true })

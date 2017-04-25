@@ -1,13 +1,5 @@
 import { browserHistory } from 'react-router'
 
-export const UPDATE_GROUP = "UPDATE_GROUP"
-
-export function updateGroup(group) {
-  return dispatch => {
-    dispatch({ type: UPDATE_GROUP, group })
-  }
-}
-
 export const POST_UPDATE_GROUP = "POST_UPDATE_GROUP"
 export const POST_UPDATE_GROUP_SUCCESS = "POST_UPDATE_GROUP_SUCCESS"
 export const POST_UPDATE_GROUP_ERROR = "POST_UPDATE_GROUP_ERROR"
@@ -33,7 +25,7 @@ export function postUpdateGroup(group) {
       dispatch({ type: POST_UPDATE_GROUP_ERROR, err })
       swal({
         type: 'error',
-        html: 'Error updating : ' + group.groupName
+        html: 'Error updating : ' + groupName
       })
     })
   }
@@ -55,7 +47,7 @@ export function addGroup(group, user) {
     dispatch({ type: ADD_GROUP })
     fetch('http://localhost:3000/groups', {
       method: 'POST',
-      body: JSON.stringify({groupName: group, email: user.email, firstname: user.firstname, surname: user.surname }),
+      body: JSON.stringify({groupName: group, userId: user._id, email: user.email, firstname: user.firstname, surname: user.surname }),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -75,10 +67,10 @@ export function addGroup(group, user) {
 export const GET_GROUPS = "GET_GROUPS"
 export const RECEIVE_GROUPS = "RECEIVE_GROUPS"
 
-export function getGroups() {
+export function getGroups(email) {
   return dispatch => {
     dispatch({ type: GET_GROUPS })
-    fetch('http://localhost:3000/groups')
+    fetch('http://localhost:3000/groups/'+ email)
     .then(response => response.json())
     .then(json => {
       dispatch({
@@ -134,5 +126,13 @@ export function addGroupMember(member) {
   member['isAdmin'] = false
   return dispatch => {
     dispatch({ type: ADD_GROUP_MEMBER, member})
+  }
+}
+
+export const REMOVE_GROUP_MEMBER = "REMOVE_GROUP_MEMBER"
+
+export function removeGroupMember(index) {
+  return dispatch => {
+    dispatch({ type: REMOVE_GROUP_MEMBER, index })
   }
 }

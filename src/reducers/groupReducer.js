@@ -1,5 +1,5 @@
 import { merge } from 'lodash'
-import { GET_GROUP, RECEIVE_GROUP, UPLOAD_IMG, UPLOAD_IMG_SUCCESS, CHANGE_GROUP_NAME, ADD_GROUP_MEMBER } from '../actions/groupActions'
+import { GET_GROUP, RECEIVE_GROUP, UPLOAD_IMG, UPLOAD_IMG_SUCCESS, CHANGE_GROUP_NAME, ADD_GROUP_MEMBER, REMOVE_GROUP_MEMBER } from '../actions/groupActions'
 
 export default (state = {
   group: {}
@@ -29,6 +29,9 @@ export default (state = {
       })
     case ADD_GROUP_MEMBER:
       state.group.members.push(action.member)
+      return state
+    case REMOVE_GROUP_MEMBER:
+      state.group.members.splice(action.index, 1)
       return state
     default:
       return state

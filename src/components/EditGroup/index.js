@@ -1,6 +1,6 @@
 import React from 'react'
 import { bindActionCreators } from 'redux'
-import { addGroupMember, getGroup, postUpdateGroup, uploadImg, changeGroupName, getUsers } from '../../actions'
+import { getGroup, postUpdateGroup, uploadImg, changeGroupName, getUsers } from '../../actions'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
 import Members from './members'
@@ -20,7 +20,7 @@ class EditGroup extends React.Component {
     this.props.getUsers()
   }
   render() {
-    const { group, users, loading, submit, uploadImg, loading_img, changeGroupName, addGroupMember } = this.props
+    const { users, group, loading, submit, uploadImg, loading_img, changeGroupName } = this.props
     return (
       <div className='settingsContainer'>
         {
@@ -51,7 +51,7 @@ class EditGroup extends React.Component {
           }} type='text' placeholder="Group Name"/> :
           <Loader/>
         }
-        <Members users={users} addGroupMember={addGroupMember} members={group && group.members}/>
+        <Members users={users} />
         <div>
           <div onClick={() => {
             console.log('save group', group);
@@ -78,7 +78,6 @@ function mapDispatchToProps(dispatch) {
     changeGroupName: bindActionCreators(changeGroupName, dispatch),
     getGroup: bindActionCreators(getGroup, dispatch),
     submit: bindActionCreators(postUpdateGroup, dispatch),
-    addGroupMember: bindActionCreators(addGroupMember, dispatch),
     uploadImg: bindActionCreators(uploadImg, dispatch)
   }
 }

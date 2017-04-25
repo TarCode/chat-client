@@ -2,8 +2,38 @@ import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Loader from '../Loader'
+import { addGroupMember, removeGroupMember } from '../../actions'
 
-export default class Members extends React.Component {
+const Memberbody = ({ loading, group, removeGroupMember }) => (
+  <tbody>
+    {
+      loading ?
+      <tr><td>Loading...</td></tr> :
+      (
+        group && group.members && group.members.length > 0 ?
+        group.members.map((i, index) => (
+          <tr key={index}>
+            <td onClick={() => {
+              if(group.members.length > 1) {
+                removeGroupMember(index)
+              } else {
+                swal({
+                  type: 'error',
+                  html: 'Cannot delete last member'
+                })
+              }
+            }}>{i.email}</td>
+            <td><input checked={group.members[index].isAdmin} onChange={() => {
+              group.members[index]["isAdmin"] = !group.members[index]["isAdmin"]
+            }} type="checkbox"/></td>
+          </tr>
+        )) :
+        <tr><td>No members</td></tr>
+      )
+    }
+  </tbody>
+)
+class Members extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -12,7 +42,7 @@ export default class Members extends React.Component {
     }
   }
   render() {
-    const { addGroupMember, loading, members, users } = this.props
+    const { addGroupMember, removeGroupMember, loading, group, users } = this.props
     return (
       <div className='members'>
         <table>
@@ -22,24 +52,7 @@ export default class Members extends React.Component {
               <th>Admin</th>
             </tr>
           </thead>
-          <tbody>
-            {
-              loading ?
-              <tr><td>Loading...</td></tr> :
-              (
-                members && members.length > 0 ?
-                members.map((i, index) => (
-                  <tr key={index}>
-                    <td>{i.email}</td>
-                    <td><input checked={members[index].isAdmin} onChange={() => {
-                      members[index]["isAdmin"] = !members[index]["isAdmin"]
-                    }} type="checkbox"/></td>
-                  </tr>
-                )) :
-                <tr><td>No members</td></tr>
-              )
-            }
-          </tbody>
+          <Memberbody loading={loading} removeGroupMember={removeGroupMember} group={group}/>
         </table>
         {
           this.state.addMember ?
@@ -90,3 +103,19 @@ export default class Members extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  const { group } = state.group
+  return {
+    group
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addGroupMember: bindActionCreators(addGroupMember, dispatch),
+    removeGroupMember: bindActionCreators(removeGroupMember, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Members)

@@ -8,10 +8,10 @@ import {
   getGroup,
   getGroups,
   addGroup,
-  updateGroup,
   uploadImg,
   changeGroupName,
   addGroupMember,
+  removeGroupMember,
   postUpdateGroup
 } from './groupActions'
 
@@ -29,9 +29,9 @@ export {
   getGroups,
   addGroup,
   changeGroupName,
-  updateGroup,
   postUpdateGroup,
   addGroupMember,
+  removeGroupMember,
   uploadImg,
   postMessage,
   getMessages,
