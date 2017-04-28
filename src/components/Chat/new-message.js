@@ -43,7 +43,7 @@ class NewMessageContainer extends React.Component {
             timestamp: new Date(),
             groupId
           }
-          if(sentiment && sentiment.confidence > 79) {
+          if(sentiment && sentiment.sentiment == 'Negative' && sentiment.confidence > 79) {
             swal({
               title: 'Are you sure?',
               text: 'We have detected that your message is potentially negative',
