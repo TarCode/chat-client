@@ -37,7 +37,11 @@ export function checkSentiment(msg) {
     .then(response => response.json())
     .then(json => {
       console.log('response json', json);
-      dispatch({ type: CHECK_SENTIMENT_SUCCESS, sentiment: JSON.parse(json.text).result})
+      if(json.errno) {
+        dispatch({ type: CHECK_SENTIMENT_ERROR, err: json.errno})
+      } else {
+        dispatch({ type: CHECK_SENTIMENT_SUCCESS, sentiment: JSON.parse(json.text).result})
+      }
     })
   }
 }
